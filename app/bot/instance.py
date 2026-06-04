@@ -1,10 +1,16 @@
 # app/bot/instance.py
+import sys
+import os
+
+# Добавляем корневую директорию в путь Python
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from aiogram import Bot, Dispatcher
 from aiogram.enums import ParseMode
-from app.config.settings import settings
-from app.middlewares.db import DBSessionMiddleware
-from app.middlewares.i18n import I18nMiddleware
-from app.middlewares.auth import AuthMiddleware
+from config.settings import settings
+from middlewares.db import DBSessionMiddleware
+from middlewares.i18n import I18nMiddleware
+from middlewares.auth import AuthMiddleware
 
 # Создаем экземпляр бота
 bot = Bot(token=settings.BOT_TOKEN, parse_mode=ParseMode.HTML)
