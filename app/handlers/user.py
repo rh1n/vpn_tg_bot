@@ -1,13 +1,18 @@
 # app/handlers/user.py
+import sys
+import os
+
+# Добавляем корневую директорию в путь Python
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+
 from aiogram import Router, F
 from aiogram.types import Message, CallbackQuery
 from aiogram.filters import Command, CommandStart
-from sqlalchemy.ext.asyncio import AsyncSession
-from app.keyboards.inline import main_menu_keyboard, back_keyboard, vpn_actions_keyboard, confirm_delete_keyboard
-from app.repositories.base import UserRepository, VPNClientRepository, SubscriptionRepository
-from app.config.settings import settings
+from keyboards.inline import main_menu_keyboard, back_keyboard, vpn_actions_keyboard, confirm_delete_keyboard
+from repositories.base import UserRepository, VPNClientRepository, SubscriptionRepository
+from config.settings import settings
 from datetime import datetime, timedelta
-from app.database.models import SubscriptionStatus
+from database.models import SubscriptionStatus
 import asyncio
 
 router = Router()
@@ -172,7 +177,7 @@ async def delete_handler(callback: CallbackQuery, gettext) -> None:
 @router.callback_query(F.data.startswith("confirm_delete:"))
 async def confirm_delete_handler(callback: CallbackQuery, gettext) -> None:
     """Обработчик подтверждения удаления"""
-    from app.services.xui import XUIService
+    from services.xui import XUIService
     
     if callback.data.startswith("confirm_delete:"):
         client_id = int(callback.data.split(":")[1])
