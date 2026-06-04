@@ -1,12 +1,17 @@
 # app/handlers/payment.py
+import sys
+import os
+
+# Добавляем корневую директорию в путь Python
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+
 from aiogram import Router, F
 from aiogram.types import PreCheckoutQuery, Message
-from sqlalchemy.ext.asyncio import AsyncSession
-from app.repositories.base import UserRepository, VPNClientRepository, SubscriptionRepository, PaymentRepository
-from app.services.xui import XUIService
-from app.services.payment import PaymentService
+from repositories.base import UserRepository, VPNClientRepository, SubscriptionRepository, PaymentRepository
+from services.xui import XUIService
+from services.payment import PaymentService
 from datetime import datetime, timedelta
-from app.utils.logger import logger
+from utils.logger import logger
 
 router = Router()
 
@@ -19,7 +24,7 @@ async def pre_checkout_handler(pre_checkout_query: PreCheckoutQuery) -> None:
 @router.message(F.successful_payment)
 async def successful_payment_handler(message: Message, gettext) -> None:
     """Обработчик успешной оплаты"""
-    from app.keyboards.inline import back_keyboard
+    from keyboards.inline import back_keyboard
     
     # Проверяем, не была ли эта оплата уже обработана
     payment_repo = PaymentRepository(message.db_session)
@@ -50,7 +55,7 @@ async def successful_payment_handler(message: Message, gettext) -> None:
             
             if not client_data:
                 # Уведомляем администратора об ошибке
-                from app.config.settings import settings
+                from config.settings import settings
                 for admin_id in settings.ADMIN_IDS:
                     try:
                         await message.bot.send_message(
