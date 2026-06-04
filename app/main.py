@@ -1,17 +1,23 @@
 # app/main.py
 import asyncio
+import sys
+import os
+
+# Добавляем корневую директорию в путь Python
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from aiogram import Dispatcher
 from aiogram.types import BotCommand
-from app.bot.instance import bot, dp
-from app.handlers.user import router as user_router
-from app.handlers.payment import router as payment_router
-from app.handlers.admin import router as admin_router
-from app.config.settings import settings
-from app.utils.logger import configure_logger, logger
-from app.database.session import engine
-from app.database.models import Base
+from bot.instance import bot, dp
+from handlers.user import router as user_router
+from handlers.payment import router as payment_router
+from handlers.admin import router as admin_router
+from config.settings import settings
+from utils.logger import configure_logger, logger
+from database.session import engine
+from database.models import Base
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
-from app.scheduler.tasks import check_expired_subscriptions, send_expiration_notifications
+from scheduler.tasks import check_expired_subscriptions, send_expiration_notifications
 
 # Настраиваем логирование
 configure_logger()
