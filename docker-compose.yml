@@ -1,0 +1,42 @@
+# docker-compose.yml
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16
+    container_name: vpn_bot_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: vpnbot
+      POSTGRES_USER: ${POSTGRES_USER:-user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - vpn_bot_net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-user}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  bot:
+    build: .
+    container_name: vpn_bot
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - .env
+    networks:
+      - vpn_bot_net
+    volumes:
+      - ./logs:/app/logs
+
+networks:
+  vpn_bot_net:
+    driver: bridge
+
+volumes:
+  db_data:
