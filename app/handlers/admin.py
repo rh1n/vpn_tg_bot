@@ -1,17 +1,22 @@
 # app/handlers/admin.py
+import sys
+import os
+
+# Добавляем корневую директорию в путь Python
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+
 from aiogram import Router, F
 from aiogram.types import Message, CallbackQuery
 from aiogram.filters import Command
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.context import FSMContext
 from sqlalchemy import func
-from sqlalchemy.ext.asyncio import AsyncSession
-from app.filters.admin import IsAdminFilter
-from app.keyboards.inline import admin_menu_keyboard, back_keyboard
-from app.repositories.base import UserRepository, VPNClientRepository, SubscriptionRepository, PaymentRepository
-from app.services.notification import NotificationService
-from app.database.models import SubscriptionStatus
-from app.utils.logger import logger
+from filters.admin import IsAdminFilter
+from keyboards.inline import admin_menu_keyboard, back_keyboard
+from repositories.base import UserRepository, VPNClientRepository, SubscriptionRepository, PaymentRepository
+from services.notification import NotificationService
+from database.models import SubscriptionStatus
+from utils.logger import logger
 
 router = Router()
 router.message.filter(IsAdminFilter())
