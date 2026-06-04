@@ -216,3 +216,26 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# .gitignore
+.env
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+env.bak/
+venv.bak/
+.DS_Store
+.idea/
+.vscode/
+*.log
+logs/
+alembic/
+!alembic.ini
+!migrations/
+migrations/versions/*
+!migrations/versions/.gitkeep
